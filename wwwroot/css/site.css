@@ -1,0 +1,121 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    background: #6a8a8f;
+    color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.navbar, .navbar-brand {
+    background: #fff !important;
+}
+.navbar .navbar-brand img {
+    filter: drop-shadow(0 2px 4px rgba(23,162,184,0.2));
+}
+.navbar .navbar-brand, .navbar .nav-link, .navbar .navbar-brand img {
+    color: #17a2b8 !important;
+}
+.navbar .nav-link.active, .navbar .nav-link:focus, .navbar .nav-link:hover {
+    color: #fff !important;
+    background: #17a2b8 !important;
+    border-radius: 4px;
+}
+
+.btn-primary, .btn-info, .btn-success {
+    background: #17a2b8;
+    border-color: #17a2b8;
+    color: #fff;
+}
+.btn-primary:hover, .btn-success:hover {
+    background: #138496;
+    border-color: #138496;
+    color: #fff;
+}
+.btn-info, .btn-warning, .btn-danger {
+    background: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+    color: #fff !important;
+}
+.btn-info:hover, .btn-warning:hover, .btn-danger:hover {
+    background: #138496 !important;
+    border-color: #138496 !important;
+    color: #fff !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #fff;
+    font-weight: 600;
+}
+
+a, .table a {
+    color: #fff;
+}
+a:hover {
+    color: #e0f7fa;
+}
+
+.table {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(23,162,184,0.07);
+    overflow: hidden;
+    color: #17a2b8;
+}
+.table th {
+    background: #e0f7fa;
+    color: #138496;
+}
+.table-striped > tbody > tr,
+.table > tbody > tr {
+    background: #fff !important;
+    color: #17a2b8;
+}
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background: #fff !important;
+}
+
+.alert-success {
+    background: #e0f7fa;
+    color: #138496;
+    border-color: #17a2b8;
+}
+
+.form-control:focus {
+    border-color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(255,255,255,0.15);
+}
+
+footer {
+    background: #6a8a8f;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+@media print {
+    .btn, nav, .navbar, .alert, footer {
+        display: none !important;
+    }
+    img {
+        display: block !important;
+        max-width: 100% !important;
+        height: auto !important;
+    }
+}

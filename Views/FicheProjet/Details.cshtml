@@ -1,0 +1,275 @@
+@model WebApplication6.Models.FicheProjet
+@{
+    ViewData["Title"] = "Détails de la Fiche Projet";
+}
+<style>
+@@media print {
+    .classic-view { display: none !important; }
+    .print-table-view { display: block !important; }
+}
+@@media screen {
+    .print-table-view { display: none; }
+}
+.print-table-view {
+    width: 95%;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #222;
+    background: #fff;
+    font-size: 1.05rem;
+}
+.print-table-view .fiche-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 0;
+    min-height: 50px;
+}
+.print-table-view .fiche-title {
+    flex: 1;
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin: 1.2rem 0 0.7rem 0;
+}
+.print-table-view .fiche-divider {
+    border: none;
+    border-top: 2.5px solid #222;
+    margin: 0 0 1.2rem 0;
+}
+.print-table-view table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.2rem;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.print-table-view th, .print-table-view td {
+    border: 1px solid #bbb;
+    padding: 7px 12px;
+    vertical-align: top;
+}
+.print-table-view th {
+    background: #e3f2fd;
+    color: #222;
+    font-weight: 700;
+    text-align: left;
+    font-size: 1.07rem;
+}
+.print-table-view .section-title, .print-table-view tr > th[colspan] {
+    background: #1976d2;
+    color: #fff;
+    font-weight: 700;
+    text-align: left;
+    font-size: 1.09rem;
+    letter-spacing: 0.5px;
+}
+.print-table-view .checkbox-cell {
+    text-align: center;
+    font-size: 1.1rem;
+}
+.print-table-view .big-cell {
+    height: 2.2cm;
+    background: #f8fafc;
+}
+.print-table-view .footer-date {
+    text-align: right;
+    margin-top: 1.5rem;
+    font-size: 1.02rem;
+    color: #222;
+}
+</style>
+
+<!-- Vue classique écran -->
+<div class="classic-view">
+    <!-- (garde la version précédente ici) -->
+    <div class="print-header">
+        <img src="~/img/promamec-logo.png" alt="PROMAMEC" />
+        <div class="print-header-title">FICHE PROJET</div>
+    </div>
+    <hr class="print-divider" />
+    <div class="print-content">
+        <div class="print-fields">
+            <dl>
+                <dt>Numéro Projet</dt>
+                <dd>@Model.NumeroProjet</dd>
+                <dt>Nom Client</dt>
+                <dd>@Model.NomClient</dd>
+                <dt>Contrat Numéro</dt>
+                <dd>@Model.ContratNumero</dd>
+                <dt>Détail Formation</dt>
+                <dd>@Model.DetailFormation</dd>
+                <dt>Détail Projet</dt>
+                <dd>
+                    <strong>Equipements:</strong> 
+                    @if (!string.IsNullOrEmpty(Model.Detail?.Equipements) && Model.Detail.Equipements.Contains("<table"))
+                    {
+                        @Html.Raw(Model.Detail.Equipements)
+                    }
+                    else
+                    {
+                        @Model.Detail?.Equipements
+                    }
+                    <br />
+                    <strong>Accessoires:</strong> @Model.Detail?.Accessoires <br />
+                    <strong>Travaux Promamec:</strong> @Model.Detail?.TravauxPromamec <br />
+                    <strong>Commentaires:</strong> @Model.Detail?.Commentaires <br />
+                </dd>
+            </dl>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary print-footer-hide" style="margin-top:2rem;">Retour à la liste</a>
+        <button class="btn btn-primary print-footer-hide" style="margin-top:2rem;" onclick="window.print()">Imprimer la fiche projet</button>
+    </div>
+    <div class="print-footer" style="display:none;">
+        Date d'impression : @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+    </div>
+</div>
+
+<!-- Vue spéciale impression -->
+<div class="print-table-view">
+    <div class="fiche-header">
+        <div class="fiche-title">FICHE PROJET</div>
+    </div>
+    <hr class="fiche-divider" />
+    <!-- Tableau et contenu impression existant -->
+    <table>
+        <tr>
+            <td>Date</td>
+            <td colspan="3">@DateTime.Now.ToString("dd/MM/yyyy")</td>
+        </tr>
+        <tr>
+            <td>N° Projet / N° Marché</td>
+            <td colspan="3">@Model.NumeroProjet</td>
+        </tr>
+        <tr>
+            <td class="section-title">Contrat N°</td>
+            <td colspan="3">@Model.ContratNumero</td>
+        </tr>
+        <tr>
+            <td>N° Affaire(s)</td>
+            <td colspan="3" >@Model.NumeroAffaire</td>
+        </tr>
+        <tr>
+            <td >Nom du Client/ Etablissement</th>
+            <td colspan="3">@Model.NomClient</td>
+        </tr>
+        <tr>
+            <td>Nom & Téléphone du Contact</td>
+            <td colspan="3">@Model.TelephoneContact</td>
+        </tr>
+        <tr>
+            <td>Adresse de livraison</td>
+            <td colspan="3">@Model.AdresseLivraison</td>
+        </tr>
+        <tr>
+            <td>Modalités de paiement Client</td>
+            <td colspan="3">@Model.ModalitePaiement</td>
+        </tr>
+        <tr>
+            <td>Dernier délai Livraison</td>
+            <td colspan="3">@(Model.DernierDelaiLivraison?.ToString("dd/MM/yyyy") ?? "")</td>
+        </tr>
+        <tr>
+            <td>Dernier délai d'exécution</td>
+            <td colspan="3">@(Model.DernierDelaiExecution?.ToString("dd/MM/yyyy") ?? "")</td>
+        </tr>
+        <tr>
+            <td>Durée de garantie</td>
+            <td colspan="3">@Model.DureeGarantie</td>
+        </tr>
+        <tr>
+            <td>Détail Formation</td>
+            <td colspan="3">@Model.DetailFormation</td>
+        </tr>
+        <tr>
+            <td>Dossier AMSSNUR requis</td>
+            <td class="checkbox-cell">@if(Model.DossierAMSSNUR){<span>☑ Oui</span>}else{<span>☐ Oui</span>}</td>
+            <td class="checkbox-cell">@if(!Model.DossierAMSSNUR){<span>☑ Non</span>}else{<span>☐ Non</span>}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Contrat de maintenance à l'acquisition</td>
+            <td class="checkbox-cell">@if(Model.ContratMaintenance){<span>☑ Oui</span>}else{<span>☐ Oui</span>}</td>
+            <td class="checkbox-cell">@if(!Model.ContratMaintenance){<span>☑ Non</span>}else{<span>☐ Non</span>}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th colspan="4">Equipements</th>
+        </tr>
+        <tr>
+            <td colspan="4" class="big-cell">
+                @if (!string.IsNullOrEmpty(Model.Detail?.Equipements) && Model.Detail.Equipements.Contains("<table"))
+                {
+                    @Html.Raw(Model.Detail.Equipements)
+                }
+                else
+                {
+                    @Model.Detail?.Equipements
+                }
+            </td>
+        </tr>
+        <tr>
+            <th colspan="4">Accessoires</th>
+        </tr>
+        <tr>
+            <td colspan="4" class="big-cell">@Model.Detail?.Accessoires</td>
+        </tr>
+        <tr>
+            <th colspan="4">Travaux à la charge de Promamec</th>
+        </tr>
+        <tr>
+            <td colspan="4" class="big-cell">@Model.Detail?.TravauxPromamec</td>
+        </tr>
+        <tr>
+            <th colspan="4">Commentaire(s)</th>
+        </tr>
+        <tr>
+            <td colspan="4" class="big-cell">@Model.Detail?.Commentaires</td>
+        </tr>
+    </table>
+    <div class="footer-date">Date d'impression : @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
+</div> 
+@if (Model.FicheMetaDonnees != null && Model.FicheMetaDonnees.Count > 0)
+{
+    <h3>Métadonnées</h3>
+    <table border="1" style="width:100%;margin-bottom:1rem;">
+        <tr>
+            <th>Créé par</th>
+            <th>Adresse IP</th>
+            <th>Session Machine</th>
+            <th>Date de création</th>
+        </tr>
+        @foreach(var meta in Model.FicheMetaDonnees)
+        {
+            <tr>
+                <td>@meta.CreePar</td>
+                <td>@meta.AdresseIP</td>
+                <td>@meta.SessionMachine</td>
+                <td>@meta.DateCreation.ToString("dd/MM/yyyy HH:mm")</td>
+            </tr>
+        }
+    </table>
+}
+@if (Model.FicheModifications != null && Model.FicheModifications.Count > 0)
+{
+    <h3>Modifications</h3>
+    <table border="1" style="width:100%;margin-bottom:1rem;">
+        <tr>
+            <th>Champ modifié</th>
+            <th>Ancienne valeur</th>
+            <th>Nouvelle valeur</th>
+            <th>Date de modification</th>
+        </tr>
+        @foreach(var modif in Model.FicheModifications)
+        {
+            <tr>
+                <td>@modif.ChampsModifie</td>
+                <td>@modif.AncienneValeur</td>
+                <td>@modif.NouvelleValeur</td>
+                <td>@modif.DateModification.ToString("dd/MM/yyyy HH:mm")</td>
+            </tr>
+        }
+    </table>
+} 

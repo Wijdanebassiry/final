@@ -1,0 +1,23 @@
+@model WebApplication6.Models.FicheProjet
+@{
+    ViewData["Title"] = "Supprimer la Fiche Projet";
+}
+<h2>@ViewData["Title"]</h2>
+<h3>Voulez-vous vraiment supprimer cette fiche projet ?</h3>
+<div>
+    <h4>Fiche Projet</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Numéro Projet</dt>
+        <dd class="col-sm-10">@Model.NumeroProjet</dd>
+        <dt class="col-sm-2">Nom Client</dt>
+        <dd class="col-sm-10">@Model.NomClient</dd>
+        <dt class="col-sm-2">Contrat Numéro</dt>
+        <dd class="col-sm-10">@Model.ContratNumero</dd>
+    </dl>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+        <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+    </form>
+</div> 

@@ -1,0 +1,8 @@
+@{
+    ViewData["Title"] = "Test de connexion à la base de données";
+}
+<h2>@ViewData["Title"]</h2>
+<div class="alert alert-info">
+    @ViewBag.DbMessage
+</div>
+<a asp-action="Index" class="btn btn-secondary">Retour à la liste</a> 
