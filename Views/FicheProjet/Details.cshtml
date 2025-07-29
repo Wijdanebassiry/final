@@ -3,6 +3,10 @@
     ViewData["Title"] = "Détails de la Fiche Projet";
 }
 <style>
+body {
+    background-color: #fff;
+    color: #000;
+}
 @@media print {
     .classic-view { display: none !important; }
     .print-table-view { display: block !important; }
@@ -14,7 +18,7 @@
     width: 95%;
     margin: 0 auto;
     font-family: 'Segoe UI', Arial, sans-serif;
-    color: #222;
+    color: #000;
     background: #fff;
     font-size: 1.05rem;
 }
@@ -52,19 +56,21 @@
     vertical-align: top;
 }
 .print-table-view th {
-    background: #e3f2fd;
-    color: #222;
+    background: #fff;
+    color: #000;
     font-weight: 700;
     text-align: left;
     font-size: 1.07rem;
+    border: 1px solid #000;
 }
 .print-table-view .section-title, .print-table-view tr > th[colspan] {
-    background: #1976d2;
-    color: #fff;
+    background: #fff;
+    color: #000;
     font-weight: 700;
     text-align: left;
     font-size: 1.09rem;
     letter-spacing: 0.5px;
+    border: 1px solid #000;
 }
 .print-table-view .checkbox-cell {
     text-align: center;
@@ -72,52 +78,159 @@
 }
 .print-table-view .big-cell {
     height: 2.2cm;
-    background: #f8fafc;
+    background: #fff;
 }
 .print-table-view .footer-date {
     text-align: right;
     margin-top: 1.5rem;
     font-size: 1.02rem;
-    color: #222;
+    color: #000;
 }
 </style>
 
 <!-- Vue classique écran -->
-<div class="classic-view">
-    <!-- (garde la version précédente ici) -->
-    <div class="print-header">
-        <img src="~/img/promamec-logo.png" alt="PROMAMEC" />
-        <div class="print-header-title">FICHE PROJET</div>
+<div class="classic-view" style="background-color: #fff; color: #000;">
+    <!-- En-tête avec logo et titre -->
+    <div class="print-header" style="display: flex; align-items: center; margin-bottom: 20px;">
+        <img src="~/img/promamec-logo.png" alt="PROMAMEC" style="width: 80px; height: auto; margin-right: 20px;" />
+        <div class="print-header-title" style="text-align: center; flex-grow: 1; font-size: 2rem; font-weight: bold;">FICHE PROJET</div>
     </div>
-    <hr class="print-divider" />
+    <hr class="print-divider" style="border: 2px solid #333; margin-bottom: 30px;" />
+    
     <div class="print-content">
         <div class="print-fields">
-            <dl>
-                <dt>Numéro Projet</dt>
-                <dd>@Model.NumeroProjet</dd>
-                <dt>Nom Client</dt>
-                <dd>@Model.NomClient</dd>
-                <dt>Contrat Numéro</dt>
-                <dd>@Model.ContratNumero</dd>
-                <dt>Détail Formation</dt>
-                <dd>@Model.DetailFormation</dd>
-                <dt>Détail Projet</dt>
-                <dd>
-                    <strong>Equipements:</strong> 
-                    @if (!string.IsNullOrEmpty(Model.Detail?.Equipements) && Model.Detail.Equipements.Contains("<table"))
-                    {
-                        @Html.Raw(Model.Detail.Equipements)
-                    }
-                    else
-                    {
-                        @Model.Detail?.Equipements
-                    }
-                    <br />
-                    <strong>Accessoires:</strong> @Model.Detail?.Accessoires <br />
-                    <strong>Travaux Promamec:</strong> @Model.Detail?.TravauxPromamec <br />
-                    <strong>Commentaires:</strong> @Model.Detail?.Commentaires <br />
-                </dd>
-            </dl>
+            <!-- Tableau Date (1 ligne, 2 colonnes) -->
+            <table class="table table-bordered" style="width: 50%; margin-bottom: 20px;">
+                <tr>
+                    <th style="width: 30%; background-color: #fff; color: #000;">Date</th>
+                    <td style="width: 70%; color: #000;">@DateTime.Now.ToString("dd/MM/yyyy")</td>
+                </tr>
+            </table>
+
+            <!-- Tableau N° Projet et N° Affaires (2 lignes, 4 colonnes) -->
+            <table class="table table-bordered" style="width: 100%; margin-bottom: 20px;">
+                <tr>
+                    <th style="width: 25%; background-color: #fff; color: #000;">N° Projet / N° Marché</th>
+                    <td style="width: 25%; color: #000;">@Model.NumeroProjet</td>
+                    <th style="width: 25%; background-color: #fff; color: #000;">N° Affaire(s)</th>
+                    <td style="width: 25%; color: #000;">@Model.NumeroAffaire</td>
+                </tr>
+                <tr>
+                    <th style="background-color: #fff; color: #000;">Nom du Client/ Etablissement</th>
+                    <td style="color: #000;">@Model.NomClient</td>
+                    <th style="background-color: #fff; color: #000;">Nom & Téléphone du Contact</th>
+                    <td style="color: #000;">@Model.TelephoneContact</td>
+                </tr>
+            </table>
+
+            <!-- Tableau Contrat N° (1 ligne) -->
+            <table class="table table-bordered" style="width: 100%; margin-bottom: 20px;">
+                <tr>
+                    <th style="width: 25%; background-color: #fff; color: #000;">Contrat N°</th>
+                    <td style="width: 75%; color: #000;">@Model.ContratNumero</td>
+                </tr>
+            </table>
+
+            <!-- Tableau autres champs (5 lignes, 2 colonnes) -->
+            <table class="table table-bordered" style="width: 100%; margin-bottom: 20px;">
+                <tr>
+                    <th style="width: 25%; background-color: #fff; color: #000;">Adresse de livraison</th>
+                    <td style="width: 75%; color: #000;">@Model.AdresseLivraison</td>
+                </tr>
+                <tr>
+                    <th style="background-color: #fff; color: #000;">Modalités de paiement Client</th>
+                    <td style="color: #000;">@Model.ModalitePaiement</td>
+                </tr>
+                <tr>
+                    <th style="background-color: #fff; color: #000;">Dernier délai Livraison</th>
+                    <td style="color: #000;">@(Model.DernierDelaiLivraison?.ToString("dd/MM/yyyy") ?? "")</td>
+                </tr>
+                <tr>
+                    <th style="background-color: #fff; color: #000;">Dernier délai d'exécution</th>
+                    <td style="color: #000;">@(Model.DernierDelaiExecution?.ToString("dd/MM/yyyy") ?? "")</td>
+                </tr>
+                <tr>
+                    <th style="background-color: #fff; color: #000;">Durée de garantie</th>
+                    <td style="color: #000;">@Model.DureeGarantie</td>
+                </tr>
+            </table>
+
+            <!-- Tableau Détail Formation -->
+            <table class="table table-bordered" style="width: 100%; margin-bottom: 20px;">
+                <tr>
+                    <th style="width: 25%; background-color: #fff; color: #000;">Détail Formation</th>
+                    <td style="width: 75%; color: #000;">@Model.DetailFormation</td>
+                </tr>
+            </table>
+
+            <!-- Tableau Dossier AMSSNUR et Contrat Maintenance -->
+            <table class="table table-bordered" style="width: 100%; margin-bottom: 20px;">
+                <tr>
+                    <th style="width: 25%; background-color: #fff; color: #000;">Dossier AMSSNUR requis</th>
+                    <td style="width: 25%; color: #000;">
+                        <input type="checkbox" @(Model.DossierAMSSNUR ? "checked" : "") disabled style="margin-right: 5px;" />
+                        <span style="color: #000;">Oui</span>
+                        <input type="checkbox" @(!Model.DossierAMSSNUR ? "checked" : "") disabled style="margin-right: 5px; margin-left: 15px;" />
+                        <span style="color: #000;">Non</span>
+                    </td>
+                    <th style="width: 25%; background-color: #fff; color: #000;">Contrat de maintenance à l'acquisition</th>
+                    <td style="width: 25%; color: #000;">
+                        <input type="checkbox" @(Model.ContratMaintenance ? "checked" : "") disabled style="margin-right: 5px;" />
+                        <span style="color: #000;">Oui</span>
+                        <input type="checkbox" @(!Model.ContratMaintenance ? "checked" : "") disabled style="margin-right: 5px; margin-left: 15px;" />
+                        <span style="color: #000;">Non</span>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Tableau Equipements -->
+            <table class="table table-bordered" style="width: 100%; margin-bottom: 20px;">
+                <tr>
+                    <th style="background-color: #fff; color: #000;">Equipements</th>
+                </tr>
+                <tr>
+                    <td style="color: #000;">
+                        @if (!string.IsNullOrEmpty(Model.Detail?.Equipements) && Model.Detail.Equipements.Contains("<table"))
+                        {
+                            @Html.Raw(Model.Detail.Equipements)
+                        }
+                        else
+                        {
+                            @Model.Detail?.Equipements
+                        }
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Tableau Accessoires -->
+            <table class="table table-bordered" style="width: 100%; margin-bottom: 20px;">
+                <tr>
+                    <th style="background-color: #fff; color: #000;">Accessoires</th>
+                </tr>
+                <tr>
+                    <td style="color: #000;">@Model.Detail?.Accessoires</td>
+                </tr>
+            </table>
+
+            <!-- Tableau Travaux à la charge de Promamec -->
+            <table class="table table-bordered" style="width: 100%; margin-bottom: 20px;">
+                <tr>
+                    <th style="background-color: #fff; color: #000;">Travaux à la charge de Promamec</th>
+                </tr>
+                <tr>
+                    <td style="color: #000;">@Model.Detail?.TravauxPromamec</td>
+                </tr>
+            </table>
+
+            <!-- Tableau Commentaires -->
+            <table class="table table-bordered" style="width: 100%; margin-bottom: 20px;">
+                <tr>
+                    <th style="background-color: #fff; color: #000;">Commentaire(s)</th>
+                </tr>
+                <tr>
+                    <td style="color: #000;">@Model.Detail?.Commentaires</td>
+                </tr>
+            </table>
         </div>
         <a asp-action="Index" class="btn btn-secondary print-footer-hide" style="margin-top:2rem;">Retour à la liste</a>
         <button class="btn btn-primary print-footer-hide" style="margin-top:2rem;" onclick="window.print()">Imprimer la fiche projet</button>
@@ -128,78 +241,105 @@
 </div>
 
 <!-- Vue spéciale impression -->
-<div class="print-table-view">
-    <div class="fiche-header">
-        <div class="fiche-title">FICHE PROJET</div>
+<div class="print-table-view" style="background-color: #fff; color: #000;">
+    <!-- En-tête avec logo et titre -->
+    <div class="fiche-header" style="display: flex; align-items: center; margin-bottom: 20px;">
+        <img src="~/img/promamec-logo.png" alt="PROMAMEC" style="width: 80px; height: auto; margin-right: 20px;" />
+        <div class="fiche-title" style="text-align: center; flex-grow: 1; font-size: 2rem; font-weight: bold;">FICHE PROJET</div>
     </div>
-    <hr class="fiche-divider" />
-    <!-- Tableau et contenu impression existant -->
-    <table>
+    <hr class="fiche-divider" style="border: 2px solid #000; margin-bottom: 30px;" />
+    
+    <!-- Tableau Date (1 ligne, 2 colonnes) -->
+    <table style="width: 50%; margin-bottom: 20px; border-collapse: collapse;">
         <tr>
-            <td>Date</td>
-            <td colspan="3">@DateTime.Now.ToString("dd/MM/yyyy")</td>
+            <th style="width: 30%; background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Date</th>
+            <td style="width: 70%; border: 1px solid #000; padding: 7px 12px;">@DateTime.Now.ToString("dd/MM/yyyy")</td>
+        </tr>
+    </table>
+
+    <!-- Tableau N° Projet et N° Affaires (2 lignes, 4 colonnes) -->
+    <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+        <tr>
+            <th style="width: 25%; background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">N° Projet / N° Marché</th>
+            <td style="width: 25%; border: 1px solid #000; padding: 7px 12px;">@Model.NumeroProjet</td>
+            <th style="width: 25%; background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">N° Affaire(s)</th>
+            <td style="width: 25%; border: 1px solid #000; padding: 7px 12px;">@Model.NumeroAffaire</td>
         </tr>
         <tr>
-            <td>N° Projet / N° Marché</td>
-            <td colspan="3">@Model.NumeroProjet</td>
+            <th style="background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Nom du Client/ Etablissement</th>
+            <td style="border: 1px solid #000; padding: 7px 12px;">@Model.NomClient</td>
+            <th style="background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Nom & Téléphone du Contact</th>
+            <td style="border: 1px solid #000; padding: 7px 12px;">@Model.TelephoneContact</td>
+        </tr>
+    </table>
+
+    <!-- Tableau Contrat N° (1 ligne) -->
+    <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+        <tr>
+            <th style="width: 25%; background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Contrat N°</th>
+            <td style="width: 75%; border: 1px solid #000; padding: 7px 12px;">@Model.ContratNumero</td>
+        </tr>
+    </table>
+
+    <!-- Tableau autres champs (5 lignes, 2 colonnes) -->
+    <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+        <tr>
+            <th style="width: 25%; background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Adresse de livraison</th>
+            <td style="width: 75%; border: 1px solid #000; padding: 7px 12px;">@Model.AdresseLivraison</td>
         </tr>
         <tr>
-            <td class="section-title">Contrat N°</td>
-            <td colspan="3">@Model.ContratNumero</td>
+            <th style="background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Modalités de paiement Client</th>
+            <td style="border: 1px solid #000; padding: 7px 12px;">@Model.ModalitePaiement</td>
         </tr>
         <tr>
-            <td>N° Affaire(s)</td>
-            <td colspan="3" >@Model.NumeroAffaire</td>
+            <th style="background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Dernier délai Livraison</th>
+            <td style="border: 1px solid #000; padding: 7px 12px;">@(Model.DernierDelaiLivraison?.ToString("dd/MM/yyyy") ?? "")</td>
         </tr>
         <tr>
-            <td >Nom du Client/ Etablissement</th>
-            <td colspan="3">@Model.NomClient</td>
+            <th style="background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Dernier délai d'exécution</th>
+            <td style="border: 1px solid #000; padding: 7px 12px;">@(Model.DernierDelaiExecution?.ToString("dd/MM/yyyy") ?? "")</td>
         </tr>
         <tr>
-            <td>Nom & Téléphone du Contact</td>
-            <td colspan="3">@Model.TelephoneContact</td>
+            <th style="background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Durée de garantie</th>
+            <td style="border: 1px solid #000; padding: 7px 12px;">@Model.DureeGarantie</td>
+        </tr>
+    </table>
+
+    <!-- Tableau Détail Formation -->
+    <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+        <tr>
+            <th style="width: 25%; background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Détail Formation</th>
+            <td style="width: 75%; border: 1px solid #000; padding: 7px 12px;">@Model.DetailFormation</td>
+        </tr>
+    </table>
+
+    <!-- Tableau Dossier AMSSNUR et Contrat Maintenance -->
+    <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+        <tr>
+            <th style="width: 25%; background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Dossier AMSSNUR requis</th>
+            <td style="width: 25%; border: 1px solid #000; padding: 7px 12px;">
+                <input type="checkbox" @(Model.DossierAMSSNUR ? "checked" : "") disabled style="margin-right: 5px;" />
+                <span style="color: #000;">Oui</span>
+                <input type="checkbox" @(!Model.DossierAMSSNUR ? "checked" : "") disabled style="margin-right: 5px; margin-left: 15px;" />
+                <span style="color: #000;">Non</span>
+            </td>
+            <th style="width: 25%; background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Contrat de maintenance à l'acquisition</th>
+            <td style="width: 25%; border: 1px solid #000; padding: 7px 12px;">
+                <input type="checkbox" @(Model.ContratMaintenance ? "checked" : "") disabled style="margin-right: 5px;" />
+                <span style="color: #000;">Oui</span>
+                <input type="checkbox" @(!Model.ContratMaintenance ? "checked" : "") disabled style="margin-right: 5px; margin-left: 15px;" />
+                <span style="color: #000;">Non</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Tableau Equipements -->
+    <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+        <tr>
+            <th style="background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Equipements</th>
         </tr>
         <tr>
-            <td>Adresse de livraison</td>
-            <td colspan="3">@Model.AdresseLivraison</td>
-        </tr>
-        <tr>
-            <td>Modalités de paiement Client</td>
-            <td colspan="3">@Model.ModalitePaiement</td>
-        </tr>
-        <tr>
-            <td>Dernier délai Livraison</td>
-            <td colspan="3">@(Model.DernierDelaiLivraison?.ToString("dd/MM/yyyy") ?? "")</td>
-        </tr>
-        <tr>
-            <td>Dernier délai d'exécution</td>
-            <td colspan="3">@(Model.DernierDelaiExecution?.ToString("dd/MM/yyyy") ?? "")</td>
-        </tr>
-        <tr>
-            <td>Durée de garantie</td>
-            <td colspan="3">@Model.DureeGarantie</td>
-        </tr>
-        <tr>
-            <td>Détail Formation</td>
-            <td colspan="3">@Model.DetailFormation</td>
-        </tr>
-        <tr>
-            <td>Dossier AMSSNUR requis</td>
-            <td class="checkbox-cell">@if(Model.DossierAMSSNUR){<span>☑ Oui</span>}else{<span>☐ Oui</span>}</td>
-            <td class="checkbox-cell">@if(!Model.DossierAMSSNUR){<span>☑ Non</span>}else{<span>☐ Non</span>}</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Contrat de maintenance à l'acquisition</td>
-            <td class="checkbox-cell">@if(Model.ContratMaintenance){<span>☑ Oui</span>}else{<span>☐ Oui</span>}</td>
-            <td class="checkbox-cell">@if(!Model.ContratMaintenance){<span>☑ Non</span>}else{<span>☐ Non</span>}</td>
-            <td></td>
-        </tr>
-        <tr>
-            <th colspan="4">Equipements</th>
-        </tr>
-        <tr>
-            <td colspan="4" class="big-cell">
+            <td style="border: 1px solid #000; padding: 7px 12px; height: 2.2cm;">
                 @if (!string.IsNullOrEmpty(Model.Detail?.Equipements) && Model.Detail.Equipements.Contains("<table"))
                 {
                     @Html.Raw(Model.Detail.Equipements)
@@ -210,48 +350,41 @@
                 }
             </td>
         </tr>
+    </table>
+
+    <!-- Tableau Accessoires -->
+    <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
         <tr>
-            <th colspan="4">Accessoires</th>
+            <th style="background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Accessoires</th>
         </tr>
         <tr>
-            <td colspan="4" class="big-cell">@Model.Detail?.Accessoires</td>
-        </tr>
-        <tr>
-            <th colspan="4">Travaux à la charge de Promamec</th>
-        </tr>
-        <tr>
-            <td colspan="4" class="big-cell">@Model.Detail?.TravauxPromamec</td>
-        </tr>
-        <tr>
-            <th colspan="4">Commentaire(s)</th>
-        </tr>
-        <tr>
-            <td colspan="4" class="big-cell">@Model.Detail?.Commentaires</td>
+            <td style="border: 1px solid #000; padding: 7px 12px; height: 2.2cm;">@Model.Detail?.Accessoires</td>
         </tr>
     </table>
+
+    <!-- Tableau Travaux à la charge de Promamec -->
+    <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+        <tr>
+            <th style="background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Travaux à la charge de Promamec</th>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding: 7px 12px; height: 2.2cm;">@Model.Detail?.TravauxPromamec</td>
+        </tr>
+    </table>
+
+    <!-- Tableau Commentaires -->
+    <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+        <tr>
+            <th style="background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Commentaire(s)</th>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding: 7px 12px; height: 2.2cm;">@Model.Detail?.Commentaires</td>
+        </tr>
+    </table>
+
     <div class="footer-date">Date d'impression : @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
 </div> 
-@if (Model.FicheMetaDonnees != null && Model.FicheMetaDonnees.Count > 0)
-{
-    <h3>Métadonnées</h3>
-    <table border="1" style="width:100%;margin-bottom:1rem;">
-        <tr>
-            <th>Créé par</th>
-            <th>Adresse IP</th>
-            <th>Session Machine</th>
-            <th>Date de création</th>
-        </tr>
-        @foreach(var meta in Model.FicheMetaDonnees)
-        {
-            <tr>
-                <td>@meta.CreePar</td>
-                <td>@meta.AdresseIP</td>
-                <td>@meta.SessionMachine</td>
-                <td>@meta.DateCreation.ToString("dd/MM/yyyy HH:mm")</td>
-            </tr>
-        }
-    </table>
-}
+@* Métadonnées masquées - visible uniquement en base de données *@
 @if (Model.FicheModifications != null && Model.FicheModifications.Count > 0)
 {
     <h3>Modifications</h3>

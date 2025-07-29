@@ -8,11 +8,13 @@
 {
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-<div class="mb-3">
-    <a class="btn btn-success" href="~/files/models.xls" download>Télécharger le modèle Excel</a>
-</div>
+
 
 <form asp-action="Create" method="post" enctype="multipart/form-data">
     <div class="form-group">
@@ -70,9 +72,8 @@
 
     <h4>Détail du projet</h4>
     <div class="form-group">
-        <label asp-for="Detail.Equipements">Equipements (optionnel si fichier Excel uploadé)</label>
+        <label asp-for="Detail.Equipements">Equipements</label>
         <input asp-for="Detail.Equipements" class="form-control" />
-        <small class="form-text text-muted">Si vous uploadez un fichier Excel, son contenu remplacera ce champ.</small>
     </div>
     <div class="form-group">
         <label asp-for="Detail.Accessoires"></label>
@@ -87,11 +88,7 @@
         <input asp-for="Detail.Commentaires" class="form-control" />
     </div>
 
-    <div class="form-group">
-        <label for="FichierExcel">Importer le fichier Excel ou CSV rempli :</label>
-        <input type="file" name="FichierExcel" class="form-control" accept=".xlsx,.xls,.csv" />
-        <small class="form-text text-muted">Formats acceptés: Excel (.xlsx, .xls) ou CSV (.csv). Assurez-vous que le fichier n'est pas protégé par mot de passe.</small>
-    </div>
+
 
     <button type="submit" class="btn btn-primary">Créer</button>
 </form> 
