@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
-using System.IO;
-using OfficeOpenXml;
 
 namespace WebApplication6.Controllers
 {
@@ -56,152 +54,10 @@ namespace WebApplication6.Controllers
         // POST: FicheProjet/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(FicheProjet ficheProjet, IFormFile FichierExcel)
+        public IActionResult Create(FicheProjet ficheProjet)
         {
             if (ModelState.IsValid)
             {
-                // Si un fichier Excel est uploadé, le convertir en HTML et stocker dans Equipements
-                if (FichierExcel != null && FichierExcel.Length > 0)
-                {
-                    try
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Fichier Excel uploadé: {FichierExcel.FileName}, Taille: {FichierExcel.Length}");
-                        
-                        // Vérifier l'extension du fichier
-                        var extension = Path.GetExtension(FichierExcel.FileName)?.ToLower() ?? "";
-                        System.Diagnostics.Debug.WriteLine($"Extension du fichier: {extension}");
-                        
-                        // Si c'est un fichier CSV, le traiter différemment
-                        if (extension == ".csv")
-                        {
-                            using (var reader = new StreamReader(FichierExcel.OpenReadStream()))
-                            {
-                                var sb = new System.Text.StringBuilder();
-                                sb.Append("<table border='1' style='border-collapse:collapse;width:100%'>");
-                                string? line;
-                                while ((line = reader.ReadLine()) != null)
-                                {
-                                    sb.Append("<tr>");
-                                    var columns = line?.Split(',') ?? new string[0];
-                                    foreach (var column in columns)
-                                    {
-                                        sb.Append($"<td>{System.Net.WebUtility.HtmlEncode(column?.Trim() ?? "")}</td>");
-                                    }
-                                    sb.Append("</tr>");
-                                }
-                                sb.Append("</table>");
-                                var htmlContent = sb.ToString();
-                                System.Diagnostics.Debug.WriteLine($"HTML généré (CSV): {htmlContent}");
-                                if (ficheProjet.Detail == null)
-                                    ficheProjet.Detail = new WebApplication6.Models.FicheDetail();
-                                ficheProjet.Detail.Equipements = htmlContent;
-                            }
-                        }
-                        else
-                        {
-                            // Traitement Excel - Extraction du tableau de la première page
-                            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                            using (var package = new OfficeOpenXml.ExcelPackage(FichierExcel.OpenReadStream()))
-                            {
-                                if (package.Workbook?.Worksheets?.Count > 0)
-                                {
-                                    // Prendre la première feuille (première page)
-                                    var worksheet = package.Workbook.Worksheets[0];
-                                    if (worksheet == null)
-                                    {
-                                        TempData["Error"] = "Impossible de lire la première feuille du fichier Excel.";
-                                        return View(ficheProjet);
-                                    }
-                                    System.Diagnostics.Debug.WriteLine($"Feuille trouvée: {worksheet.Name}, Dimensions: {worksheet.Dimension}");
-                                
-                                    if (worksheet.Dimension != null)
-                                    {
-                                        var sb = new System.Text.StringBuilder();
-                                        sb.Append("<table border='1' style='border-collapse:collapse;width:100%;margin-top:10px;'>");
-                                        
-                                        // Détecter automatiquement les limites du tableau
-                                        int startRow = worksheet.Dimension.Start.Row;
-                                        int endRow = worksheet.Dimension.End.Row;
-                                        int startCol = worksheet.Dimension.Start.Column;
-                                        int endCol = worksheet.Dimension.End.Column;
-                                        
-                                        System.Diagnostics.Debug.WriteLine($"Extraction du tableau: Lignes {startRow}-{endRow}, Colonnes {startCol}-{endCol}");
-                                        
-                                        for (int row = startRow; row <= endRow; row++)
-                                        {
-                                            sb.Append("<tr>");
-                                            for (int col = startCol; col <= endCol; col++)
-                                            {
-                                                var value = "";
-                                                try
-                                                {
-                                                    var cell = worksheet.Cells?[row, col];
-                                                    value = cell?.Text ?? "";
-                                                }
-                                                catch
-                                                {
-                                                    value = "";
-                                                }
-                                                System.Diagnostics.Debug.WriteLine($"Cellule [{row},{col}]: '{value}'");
-                                                sb.Append($"<td style='padding:8px;border:1px solid #ddd;'>{System.Net.WebUtility.HtmlEncode(value)}</td>");
-                                            }
-                                            sb.Append("</tr>");
-                                        }
-                                        sb.Append("</table>");
-                                        
-                                        var htmlContent = sb.ToString();
-                                        System.Diagnostics.Debug.WriteLine($"Tableau HTML généré de la première page: {htmlContent}");
-                                        
-                                        if (ficheProjet.Detail == null)
-                                            ficheProjet.Detail = new WebApplication6.Models.FicheDetail();
-                                        ficheProjet.Detail.Equipements = htmlContent;
-                                        
-                                        TempData["Success"] = $"Tableau extrait avec succès de la première page du fichier Excel ({endRow - startRow + 1} lignes, {endCol - startCol + 1} colonnes)";
-                                    }
-                                    else
-                                    {
-                                        System.Diagnostics.Debug.WriteLine("Feuille Excel vide ou sans données");
-                                        TempData["Error"] = "Le fichier Excel ne contient pas de données dans la première page.";
-                                    }
-                                }
-                                else
-                                {
-                                    System.Diagnostics.Debug.WriteLine("Aucune feuille trouvée dans le fichier Excel");
-                                    TempData["Error"] = "Le fichier Excel ne contient aucune feuille de calcul.";
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex) 
-                    { 
-                        System.Diagnostics.Debug.WriteLine($"Erreur lecture Excel/CSV: {ex.Message}");
-                        System.Diagnostics.Debug.WriteLine($"Type d'erreur: {ex.GetType().Name}");
-                        
-                        string errorMessage = "Erreur lors de la lecture du fichier.";
-                        
-                        if (ex.Message.Contains("encryption") || ex.Message.Contains("password"))
-                        {
-                            errorMessage = "Le fichier Excel est protégé par mot de passe ou chiffré. Veuillez :<br/>" +
-                                          "1. Ouvrir le fichier dans Excel<br/>" +
-                                          "2. Aller dans 'Fichier' > 'Informations' > 'Protéger le classeur'<br/>" +
-                                          "3. Supprimer la protection par mot de passe<br/>" +
-                                          "4. Sauvegarder le fichier<br/>" +
-                                          "5. Réessayer l'upload";
-                        }
-                        else if (ex.Message.Contains("Invalid"))
-                        {
-                            errorMessage = "Format de fichier non supporté. Veuillez utiliser un fichier Excel (.xlsx) ou CSV (.csv) non protégé.";
-                        }
-                        else
-                        {
-                            errorMessage = $"Erreur technique: {ex.Message}";
-                        }
-                        
-                        TempData["Error"] = errorMessage;
-                        /* ignore, fallback to champ texte */ 
-                    }
-                }
-                // Si pas de fichier Excel, garder le texte manuel dans Equipements
                 _context.FicheProjets.Add(ficheProjet);
                 _context.SaveChanges();
 
@@ -225,23 +81,24 @@ namespace WebApplication6.Controllers
                     _context.SaveChanges();
                 }
 
-                // Gestion de l'upload du fichier Excel
-                if (FichierExcel != null && FichierExcel.Length > 0)
-                {
-                    var uploadsDir = Path.Combine("wwwroot", "uploads");
-                    if (!Directory.Exists(uploadsDir))
-                        Directory.CreateDirectory(uploadsDir);
-                    var filePath = Path.Combine(uploadsDir, Path.GetFileName(FichierExcel.FileName));
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        FichierExcel.CopyTo(stream);
-                    }
-                    // Optionnel : stocker le nom ou chemin du fichier dans la base
-                }
-
                 return RedirectToAction(nameof(Index));
             }
-            TempData["Error"] = "Erreur de validation côté serveur.";
+            
+            // Afficher les erreurs de validation spécifiques
+            var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            
+            if (errors.Any())
+            {
+                TempData["Error"] = "Erreurs de validation : " + string.Join(", ", errors);
+            }
+            else
+            {
+                TempData["Error"] = "Erreur de validation côté serveur.";
+            }
+            
             return View(ficheProjet);
         }
 

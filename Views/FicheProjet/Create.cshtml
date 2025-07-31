@@ -72,12 +72,14 @@
 
     <h4>Détail du projet</h4>
     <div class="form-group">
-        <label asp-for="Detail.Equipements">Equipements</label>
-        <input asp-for="Detail.Equipements" class="form-control" />
+        <label asp-for="Detail.Equipements">Equipements (un équipement par ligne)</label>
+        <textarea asp-for="Detail.Equipements" class="form-control" rows="10" placeholder=""></textarea>
+        <small class="form-text text-muted">Saisissez chaque équipement sur une ligne séparée. Utilisez la touche Entrée pour passer à la ligne suivante.</small>
     </div>
     <div class="form-group">
-        <label asp-for="Detail.Accessoires"></label>
-        <input asp-for="Detail.Accessoires" class="form-control" />
+        <label asp-for="Detail.Accessoires">Accessoires (un accessoire par ligne)</label>
+        <textarea asp-for="Detail.Accessoires" class="form-control" rows="10" placeholder=""></textarea>
+        <small class="form-text text-muted">Saisissez chaque accessoire sur une ligne séparée. Utilisez la touche Entrée pour passer à la ligne suivante.</small>
     </div>
     <div class="form-group">
         <label asp-for="Detail.TravauxPromamec"></label>

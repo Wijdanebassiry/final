@@ -8,10 +8,10 @@ namespace WebApplication6.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Equipements { get; set; }
-        public string Accessoires { get; set; }
-        public string TravauxPromamec { get; set; }
-        public string Commentaires { get; set; }
+        public string? Equipements { get; set; }
+        public string? Accessoires { get; set; }
+        public string? TravauxPromamec { get; set; }
+        public string? Commentaires { get; set; }
 
         public int FicheProjetId { get; set; }
         public FicheProjet? FicheProjet { get; set; }
