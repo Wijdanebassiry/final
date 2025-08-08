@@ -72,6 +72,10 @@
         <input asp-for="DetailFormation" class="form-control" />
     </div>
     <div class="form-group">
+        <label asp-for="Budget">Budget (€)</label>
+        <input asp-for="Budget" type="number" step="0.01" class="form-control" placeholder="0.00" />
+    </div>
+    <div class="form-group">
         <label asp-for="DossierAMSSNUR"></label>
         <input asp-for="DossierAMSSNUR" type="checkbox" class="form-check-input" />
     </div>

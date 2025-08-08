@@ -178,6 +178,7 @@ namespace WebApplication6.Controllers
                     existingProjet.DernierDelaiExecution = ficheProjet.DernierDelaiExecution;
                     existingProjet.DureeGarantie = ficheProjet.DureeGarantie;
                     existingProjet.DetailFormation = ficheProjet.DetailFormation;
+                    existingProjet.Budget = ficheProjet.Budget;
                     existingProjet.DossierAMSSNUR = ficheProjet.DossierAMSSNUR;
                     existingProjet.ContratMaintenance = ficheProjet.ContratMaintenance;
 

@@ -18,6 +18,7 @@ namespace WebApplication6.Models
         public DateTime? DernierDelaiExecution { get; set; }
         public string? DureeGarantie { get; set; }
         public string? DetailFormation { get; set; }
+        public decimal? Budget { get; set; }
         public bool DossierAMSSNUR { get; set; }
         public bool ContratMaintenance { get; set; }
 

@@ -163,6 +163,14 @@ body {
                 </tr>
             </table>
 
+            <!-- Tableau Budget -->
+            <table class="table table-bordered" style="width: 100%; margin-bottom: 20px;">
+                <tr>
+                    <th style="width: 25%; background-color: #fff; color: #000;">Budget</th>
+                    <td style="width: 75%; color: #000;">@(Model.Budget?.ToString("C2") ?? "Non défini")</td>
+                </tr>
+            </table>
+
             <!-- Tableau Dossier AMSSNUR et Contrat Maintenance -->
             <table class="table table-bordered" style="width: 100%; margin-bottom: 20px;">
                 <tr>
@@ -350,6 +358,14 @@ body {
         <tr>
             <th style="width: 25%; background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Détail Formation</th>
             <td style="width: 75%; border: 1px solid #000; padding: 7px 12px;">@Model.DetailFormation</td>
+        </tr>
+    </table>
+
+    <!-- Tableau Budget -->
+    <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+        <tr>
+            <th style="width: 25%; background-color: #fff; color: #000; border: 1px solid #000; padding: 7px 12px;">Budget</th>
+            <td style="width: 75%; border: 1px solid #000; padding: 7px 12px;">@(Model.Budget?.ToString("C2") ?? "Non défini")</td>
         </tr>
     </table>
 
