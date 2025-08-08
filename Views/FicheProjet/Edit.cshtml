@@ -2,79 +2,149 @@
 @{
     ViewData["Title"] = "Modifier la Fiche Projet";
 }
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
 <h2>@ViewData["Title"]</h2>
+
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="Detail.Id" />
-    <div class="form-group">
-        <label asp-for="NumeroProjet"></label>
-        <input asp-for="NumeroProjet" class="form-control" />
+    @if (Model.Detail != null)
+    {
+        <input type="hidden" asp-for="Detail.Id" />
+    }
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="NumeroProjet" class="form-label"></label>
+                <input asp-for="NumeroProjet" class="form-control" readonly />
+                <small class="form-text text-muted">Numéro de projet non modifiable</small>
+                <span asp-validation-for="NumeroProjet" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="NumeroAffaire" class="form-label"></label>
+                <input asp-for="NumeroAffaire" class="form-control" />
+                <span asp-validation-for="NumeroAffaire" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="ContratNumero" class="form-label">Contrat Numéro / Bande de Commande</label>
+                <input asp-for="ContratNumero" class="form-control" />
+                <span asp-validation-for="ContratNumero" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="NomClient" class="form-label"></label>
+                <input asp-for="NomClient" class="form-control" />
+                <span asp-validation-for="NomClient" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="TelephoneContact" class="form-label"></label>
+                <input asp-for="TelephoneContact" class="form-control" />
+                <span asp-validation-for="TelephoneContact" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="AdresseLivraison" class="form-label"></label>
+                <textarea asp-for="AdresseLivraison" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="AdresseLivraison" class="text-danger"></span>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="ModalitePaiement" class="form-label"></label>
+                <input asp-for="ModalitePaiement" class="form-control" />
+                <span asp-validation-for="ModalitePaiement" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="DernierDelaiLivraison" class="form-label"></label>
+                <input asp-for="DernierDelaiLivraison" type="date" class="form-control" />
+                <span asp-validation-for="DernierDelaiLivraison" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="DernierDelaiExecution" class="form-label"></label>
+                <input asp-for="DernierDelaiExecution" type="date" class="form-control" />
+                <span asp-validation-for="DernierDelaiExecution" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="DureeGarantie" class="form-label"></label>
+                <input asp-for="DureeGarantie" class="form-control" />
+                <span asp-validation-for="DureeGarantie" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="DetailFormation" class="form-label"></label>
+                <input asp-for="DetailFormation" class="form-control" />
+                <span asp-validation-for="DetailFormation" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <div class="form-check">
+                    <input asp-for="DossierAMSSNUR" class="form-check-input" />
+                    <label asp-for="DossierAMSSNUR" class="form-check-label"></label>
+                </div>
+            </div>
+            
+            <div class="form-group mb-3">
+                <div class="form-check">
+                    <input asp-for="ContratMaintenance" class="form-check-input" />
+                    <label asp-for="ContratMaintenance" class="form-check-label"></label>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="NumeroAffaire"></label>
-        <input asp-for="NumeroAffaire" class="form-control" />
+    
+    <h4 class="mt-4">Détail du projet</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Detail.Equipements" class="form-label">Equipements (un équipement par ligne)</label>
+                <textarea asp-for="Detail.Equipements" class="form-control" rows="10"></textarea>
+                <small class="form-text text-muted">Saisissez chaque équipement sur une ligne séparée.</small>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="Detail.Accessoires" class="form-label">Accessoires (un accessoire par ligne)</label>
+                <textarea asp-for="Detail.Accessoires" class="form-control" rows="10"></textarea>
+                <small class="form-text text-muted">Saisissez chaque accessoire sur une ligne séparée.</small>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Detail.TravauxPromamec" class="form-label"></label>
+                <textarea asp-for="Detail.TravauxPromamec" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Detail.TravauxPromamec" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="Detail.Commentaires" class="form-label"></label>
+                <textarea asp-for="Detail.Commentaires" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Detail.Commentaires" class="text-danger"></span>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="ContratNumero"></label>
-        <input asp-for="ContratNumero" class="form-control" />
+    
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+        <a asp-action="Index" class="btn btn-secondary">Annuler</a>
     </div>
-    <div class="form-group">
-        <label asp-for="NomClient"></label>
-        <input asp-for="NomClient" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="TelephoneContact"></label>
-        <input asp-for="TelephoneContact" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="AdresseLivraison"></label>
-        <input asp-for="AdresseLivraison" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="ModalitePaiement"></label>
-        <input asp-for="ModalitePaiement" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="DernierDelaiLivraison"></label>
-        <input asp-for="DernierDelaiLivraison" type="date" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="DernierDelaiExecution"></label>
-        <input asp-for="DernierDelaiExecution" type="date" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="DureeGarantie"></label>
-        <input asp-for="DureeGarantie" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="DetailFormation"></label>
-        <input asp-for="DetailFormation" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="DossierAMSSNUR"></label>
-        <input asp-for="DossierAMSSNUR" type="checkbox" class="form-check-input" />
-    </div>
-    <div class="form-group">
-        <label asp-for="ContratMaintenance"></label>
-        <input asp-for="ContratMaintenance" type="checkbox" class="form-check-input" />
-    </div>
-    <h4>Détail du projet</h4>
-    <div class="form-group">
-        <label asp-for="Detail.Equipements"></label>
-        <input asp-for="Detail.Equipements" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Detail.Accessoires"></label>
-        <input asp-for="Detail.Accessoires" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Detail.TravauxPromamec"></label>
-        <input asp-for="Detail.TravauxPromamec" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Detail.Commentaires"></label>
-        <input asp-for="Detail.Commentaires" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-primary">Enregistrer</button>
-    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
-</form> 
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

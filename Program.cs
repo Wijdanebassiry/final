@@ -1,6 +1,7 @@
 using WebApplication6.Data;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
+using WebApplication6.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,9 @@ builder.Services.AddControllersWithViews();
 // Configuration du DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Configuration des services
+builder.Services.AddScoped<INumeroProjetService, NumeroProjetService>();
 builder.Services.AddSession();
 
 var app = builder.Build();

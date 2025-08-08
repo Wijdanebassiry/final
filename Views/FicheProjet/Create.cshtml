@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Créer une Fiche Projet";
 }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 <h2>@ViewData["Title"]</h2>
 
 @if (TempData["Error"] != null)
@@ -18,15 +19,24 @@
 
 <form asp-action="Create" method="post" enctype="multipart/form-data">
     <div class="form-group">
-        <label asp-for="NumeroProjet"></label>
-        <input asp-for="NumeroProjet" class="form-control" />
+        <label asp-for="NumeroProjet" class="form-label fw-bold">Numéro de Projet</label>
+        <div class="input-group">
+            <input asp-for="NumeroProjet" class="form-control bg-light" readonly style="font-weight: bold; color: #0d6efd;" />
+            <button type="button" class="btn btn-outline-secondary" onclick="regenererNumero()">
+                <i class="fas fa-sync-alt"></i> Régénérer
+            </button>
+        </div>
+        <small class="form-text text-muted">
+            <i class="fas fa-info-circle"></i> Numéro généré automatiquement - Format: PRJ-{Année}-{Séquence}
+        </small>
+        <span asp-validation-for="NumeroProjet" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="NumeroAffaire"></label>
         <input asp-for="NumeroAffaire" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="ContratNumero"></label>
+        <label asp-for="ContratNumero">Contrat Numéro / Bande de Commande</label>
         <input asp-for="ContratNumero" class="form-control" />
     </div>
     <div class="form-group">
@@ -93,4 +103,18 @@
 
 
     <button type="submit" class="btn btn-primary">Créer</button>
-</form> 
+</form>
+
+<script>
+function regenererNumero() {
+    fetch('/FicheProjet/RegenererNumero')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('NumeroProjet').value = data.numeroProjet;
+        })
+        .catch(error => {
+            console.error('Erreur lors de la régénération:', error);
+            alert('Erreur lors de la régénération du numéro de projet');
+        });
+}
+</script> 

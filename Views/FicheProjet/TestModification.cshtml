@@ -1,0 +1,16 @@
+@{
+    ViewData["Title"] = "Test Modification";
+}
+
+<h2>Test de Modification</h2>
+
+@if (ViewBag.TestMessage != null)
+{
+    <div class="alert alert-info">
+        <pre>@ViewBag.TestMessage</pre>
+    </div>
+}
+
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-primary">Retour à la liste</a>
+</div> 
